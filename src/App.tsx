@@ -1,6 +1,5 @@
 import React from 'react';
-// import logo from './logo.svg';
-import './App.css';
+import './styles/app.css';
 import Game from './components/game';
 
 function App() {
