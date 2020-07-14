@@ -1,6 +1,6 @@
 import React from 'react';
 import Player from './player';
-import './../styles/game.css';
+import './../styles/game.scss';
 
 class Game extends React.Component {
   render(): JSX.Element {
