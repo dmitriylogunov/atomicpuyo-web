@@ -6,8 +6,8 @@ class Game extends React.Component {
   render(): JSX.Element {
     return (
       <div className="game">
-        <div className="leftfield"><Player /></div>
-        <div className="rightfield"><Player /></div>
+        <div className="player player1"><Player /></div>
+        <div className="player player2"><Player /></div>
       </div>
     )
   }

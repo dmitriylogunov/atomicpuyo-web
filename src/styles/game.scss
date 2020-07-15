@@ -1,0 +1,119 @@
+$cellWidth: 6vw;
+$cellHeight: $cellWidth;
+$rowWidth: 6;
+
+$puyocolor1: red;
+$puyocolor2: green;
+$puyocolor3: blue;
+$puyocolor4: yellow;
+$puyocolor5: purple;
+
+$player1FrameColor: white;
+$player1bgColor: #00a1f7;
+$player2FrameColor: white;
+$player2bgColor: #cd5e71;
+
+$padding: 1vw;
+
+.game {
+  background: #31b808;
+  width: 100vw;
+  height: 100vh;
+
+  @mixin playerCustomStyles($frameColor, $backgroundColor) {
+    .garbage {
+      background: $backgroundColor;
+      border-bottom: 2px solid $frameColor;
+    }
+
+    .field {
+      border-color: $frameColor;
+
+      .grid {
+        background-color: desaturate($backgroundColor, 80%);
+      }
+    }
+  }
+
+  .player1 {
+    @include playerCustomStyles($player1FrameColor, $player1bgColor);
+  }
+
+  .player2 {
+    @include playerCustomStyles($player2FrameColor, $player2bgColor);
+  }
+
+  .player {
+    float: left;
+    margin: $padding;
+
+    .garbage {
+      width: $cellWidth * $rowWidth;
+      height: $cellHeight + $padding*2;
+      box-sizing: content-box;
+      padding-top: $padding;
+    }
+
+    .field {
+      border-width: 2px;
+      border-style: solid;
+      width: $cellWidth * $rowWidth;
+      box-sizing: content-box;
+
+      ol.grid {
+        text-decoration: none;
+        list-style-type: none;
+      }
+
+      .grid {
+        display: flex;
+        flex-flow: row wrap;
+        width: $cellWidth * 6;
+        border: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+
+        .cell {
+          margin: 0;
+          height: $cellHeight;
+          width: $cellWidth;
+
+          @mixin puyoCellBackground($color) {
+            background-color: rgba($color, 0.5);
+            box-shadow: 0 0 $cellWidth/2 0 $color;
+          }
+
+          &.cell-empty {
+            background-color: transparent;
+          }
+
+          &.cell-withpuyo {
+            border-radius: 50%;
+            opacity: 0.5;
+
+            &.type1 {
+              @include puyoCellBackground($puyocolor1);
+            }
+
+            &.type2 {
+              @include puyoCellBackground($puyocolor2);
+            }
+
+            &.type3 {
+              @include puyoCellBackground($puyocolor3);
+            }
+
+            &.type4 {
+              @include puyoCellBackground($puyocolor4);
+            }
+
+            &.type5 {
+              @include puyoCellBackground($puyocolor5);
+            }
+          }
+        }
+      }
+    }
+  }
+}

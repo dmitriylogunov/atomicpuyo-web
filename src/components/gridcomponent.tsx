@@ -1,8 +1,7 @@
 import React from 'react';
 import Puyo from './puyo';
 
-type Line<T> = Array<T>;
-type Grid = Array<Line<number>>;
+type Grid = Array<number>;
 
 class GridComponent extends React.Component< {}, { grid: Grid }> {
   private readonly gridWidth: number = 6;
@@ -14,16 +13,11 @@ class GridComponent extends React.Component< {}, { grid: Grid }> {
   constructor(props: object) {
   super(props);
 
-    let grid: Grid = new Array<Line<number>>(this.gridHeight);
-    let line: Line<number> = Array<number>(this.gridWidth).fill(this.emptyCell);
-
-    grid.fill(line.slice());
+    let grid: Grid = new Array<number>(this.gridHeight * this.gridWidth).fill(this.emptyCell);
 
     // for debugging layout
-    for (let i=0;i<this.gridHeight;i++) {
-      for (let j=0;j<this.gridWidth;j++) {
-        grid[i][j] = Math.floor(Math.random() * 6);
-      }
+    for (let i=0;i<grid.length;i++) {
+      grid[i] = Math.floor(Math.random() * 6);
     }
 
     this.state = {
@@ -31,29 +25,55 @@ class GridComponent extends React.Component< {}, { grid: Grid }> {
     }
   }
 
-  private getCell(y: number, x:number): number {
-    return (x>=0 && y>=0 && x<this.gridWidth && y<this.gridHeight)
-        ? this.state.grid[y][x]
-        : this.invalidCell
+  private getCellToTop(index: number): number {
+    return this.getCell(index-this.gridWidth);
+  }
+
+  private getCellToBottom(index: number): number {
+    return this.getCell(index+this.gridWidth);
+  }
+
+  private getCellToLeft(index: number): number {
+    let isLeftmostCell = index % this.gridWidth == 0;
+
+    return (isLeftmostCell)
+        ? this.invalidCell
+        : this.getCell(index-1);
+  }
+
+  private getCellToRight(index: number): number {
+    let isRightmostCell = index % this.gridWidth == this.gridWidth-1;
+
+    return (isRightmostCell)
+        ? this.invalidCell
+        : this.getCell(index+1);
+  }
+
+  private getCell(index: number):number {
+    return (index>=0 && index<this.state.grid.length)
+      ? this.state.grid[index]
+      : this.invalidCell
   }
 
   render(): JSX.Element {
-    const grid = this.state.grid.map((line, y) => {
-      return line.map((cell, x) => {
-        const puyo = (cell!=this.emptyCell)
-            ? <Puyo
-                type={cell}
-                top={this.getCell(y-1, x)}
-                bottom={this.getCell(y+1, x)}
-                left={this.getCell(y, x-1)}
-                right={this.getCell(y, x+1)}
-            />
-            : ''
+    const grid = this.state.grid.map((type, index) => {
+      const puyo = (type==this.emptyCell)
+        ? ''
+        : <Puyo
+            type={type}
+            connectTop={type==this.getCellToTop(index)}
+            connectBottom={type==this.getCellToBottom(index)}
+            connectLeft={type==this.getCellToLeft(index)}
+            connectRight={type==this.getCellToRight(index)}
+        />
 
-        return (
-            <li key={y*this.gridWidth + x} className="cell">{puyo}</li>
-        );
-      });
+      let className
+          = 'cell'
+          + ' cell-' + ((type==this.emptyCell)?'empty':'withpuyo type' + type.toString());
+
+      return (
+          <li key={index} className={className}>{puyo}</li>
+      );
     });
 
     return(
