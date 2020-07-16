@@ -1,4 +1,5 @@
-$cellWidth: 6vw;
+$cellWidth: 3em;
+$padding: 1em;
 $cellHeight: $cellWidth;
 $rowWidth: 6;
 
@@ -13,7 +14,37 @@ $player1bgColor: #00a1f7;
 $player2FrameColor: white;
 $player2bgColor: #cd5e71;
 
-$padding: 1vw;
+@mixin puyo($color) {
+  border: 1px solid saturate($color, 100%);
+  border-radius: 50%;
+  background-color: desaturate($color, 50%);
+  height: $cellHeight;
+  width: $cellWidth;
+  box-sizing: border-box;
+  //background-image: url('/icon192.png');
+  //background-repeat: no-repeat;
+  //background-attachment: fixed;
+  //background-position: center;
+  //background-size: contain;
+}
+
+.puyo {
+  &.type1 {
+    @include puyo($puyocolor1);
+  }
+  &.type2 {
+    @include puyo($puyocolor2);
+  }
+  &.type3 {
+    @include puyo($puyocolor3);
+  }
+  &.type4 {
+    @include puyo($puyocolor4);
+  }
+  &.type5 {
+    @include puyo($puyocolor5);
+  }
+}
 
 .game {
   background: #31b808;

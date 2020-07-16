@@ -7,7 +7,7 @@ function Puyo(props: any): JSX.Element {
     (props.connectLeft ? 'L' : '') +
     (props.connectRight ? 'R' : '');
 
-  let className: string = 'puyo type-' + props.type.toString();
+  let className: string = 'puyo type' + props.type.toString();
 
   return (
     <div className={className}>&nbsp;{connectCode}</div>
