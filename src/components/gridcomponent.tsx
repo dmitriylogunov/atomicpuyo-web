@@ -3,7 +3,7 @@ import Puyo from './puyo';
 
 type Grid = Array<number>;
 
-class GridComponent extends React.Component< {}, { grid: Grid }> {
+class GridComponent extends React.Component<{}, { grid: Grid }> {
   private readonly gridWidth: number = 6;
   private readonly gridHeight: number = 12;
 
@@ -11,12 +11,12 @@ class GridComponent extends React.Component< {}, { grid: Grid }> {
   private readonly emptyCell: number = 0;
 
   constructor(props: object) {
-  super(props);
+    super(props);
 
     let grid: Grid = new Array<number>(this.gridHeight * this.gridWidth).fill(this.emptyCell);
 
     // for debugging layout
-    for (let i=0;i<grid.length;i++) {
+    for (let i = 0; i < grid.length; i++) {
       grid[i] = Math.floor(Math.random() * 6);
     }
 
@@ -26,57 +26,57 @@ class GridComponent extends React.Component< {}, { grid: Grid }> {
   }
 
   private getCellToTop(index: number): number {
-    return this.getCell(index-this.gridWidth);
+    return this.getCell(index - this.gridWidth);
   }
 
   private getCellToBottom(index: number): number {
-    return this.getCell(index+this.gridWidth);
+    return this.getCell(index + this.gridWidth);
   }
 
   private getCellToLeft(index: number): number {
     let isLeftmostCell = index % this.gridWidth == 0;
 
     return (isLeftmostCell)
-        ? this.invalidCell
-        : this.getCell(index-1);
+      ? this.invalidCell
+      : this.getCell(index - 1);
   }
 
   private getCellToRight(index: number): number {
-    let isRightmostCell = index % this.gridWidth == this.gridWidth-1;
+    let isRightmostCell = index % this.gridWidth == this.gridWidth - 1;
 
     return (isRightmostCell)
-        ? this.invalidCell
-        : this.getCell(index+1);
+      ? this.invalidCell
+      : this.getCell(index + 1);
   }
 
-  private getCell(index: number):number {
-    return (index>=0 && index<this.state.grid.length)
+  private getCell(index: number): number {
+    return (index >= 0 && index < this.state.grid.length)
       ? this.state.grid[index]
       : this.invalidCell
   }
 
   render(): JSX.Element {
     const grid = this.state.grid.map((type, index) => {
-      const puyo = (type==this.emptyCell)
+      const puyo = (type == this.emptyCell)
         ? ''
         : <Puyo
-            type={type}
-            connectTop={type==this.getCellToTop(index)}
-            connectBottom={type==this.getCellToBottom(index)}
-            connectLeft={type==this.getCellToLeft(index)}
-            connectRight={type==this.getCellToRight(index)}
+          type={type}
+          connectTop={type == this.getCellToTop(index)}
+          connectBottom={type == this.getCellToBottom(index)}
+          connectLeft={type == this.getCellToLeft(index)}
+          connectRight={type == this.getCellToRight(index)}
         />
 
       let className
-          = 'cell'
-          + ' cell-' + ((type==this.emptyCell)?'empty':'withpuyo type' + type.toString());
+        = 'cell'
+        + ' cell-' + ((type == this.emptyCell) ? 'empty' : 'withpuyo type' + type.toString());
 
       return (
-          <li key={index} className={className}>{puyo}</li>
+        <li key={index} className={className}>{puyo}</li>
       );
     });
 
-    return(
+    return (
       <ol className="grid">
         {grid}
       </ol>

@@ -4,11 +4,11 @@ import Garbage from './garbage'
 
 class Player extends React.Component {
   render(): JSX.Element {
-    return(
+    return (
       <div className="field">
-        <div className="garbage" />
-        <Garbage />
-        <GridComponent />
+        <div className="garbage"/>
+        <Garbage/>
+        <GridComponent/>
       </div>
     )
   }
