@@ -1,5 +1,5 @@
 import React from 'react';
-import GridComponent from './gridcomponent';
+import Grid from './grid';
 import Garbage from './garbage'
 
 class Player extends React.Component<{
@@ -12,7 +12,7 @@ class Player extends React.Component<{
       <div className="field">
         <div className="garbage"/>
         <Garbage/>
-        <GridComponent/>
+        <Grid/>
       </div>
     )
   }

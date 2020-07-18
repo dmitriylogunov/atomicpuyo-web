@@ -1,9 +1,9 @@
 import React from 'react';
 import Puyo from './puyo';
 
-type Grid = Array<number>;
+type GridData = Array<number>;
 
-class GridComponent extends React.Component<{}, { grid: Grid }> {
+class Grid extends React.Component<{}, { grid: GridData }> {
   private readonly gridWidth: number = 6;
   private readonly gridHeight: number = 12;
 
@@ -13,7 +13,7 @@ class GridComponent extends React.Component<{}, { grid: Grid }> {
   constructor(props: object) {
     super(props);
 
-    let grid: Grid = new Array<number>(this.gridHeight * this.gridWidth).fill(this.emptyCell);
+    let grid: GridData = new Array<number>(this.gridHeight * this.gridWidth).fill(this.emptyCell);
 
     // for debugging layout
     for (let i = 0; i < grid.length; i++) {
@@ -84,4 +84,4 @@ class GridComponent extends React.Component<{}, { grid: Grid }> {
   }
 }
 
-export default GridComponent;
+export default Grid;
