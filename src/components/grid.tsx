@@ -16,9 +16,9 @@ class Grid extends React.Component<{}, { grid: GridData }> {
     let grid: GridData = new Array<number>(this.gridHeight * this.gridWidth).fill(this.emptyCell);
 
     // for debugging layout
-    for (let i = 0; i < grid.length; i++) {
-      grid[i] = Math.floor(Math.random() * 6);
-    }
+    // for (let i = 0; i < grid.length; i++) {
+    //   grid[i] = Math.floor(Math.random() * 6);
+    // }
 
     this.state = {
       grid: grid
