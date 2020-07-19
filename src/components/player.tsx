@@ -19,14 +19,13 @@ class Player extends React.Component<{
     let group = '';
 
     return (
-      <div classname="queue">
-
-      </div>
-      <div className="field">
-        <div className="garbage"/>
-        <Garbage/>
-        <Grid/>
-        {group}
+      <div>
+        <div className="queue" />
+        <div className="field">
+          <Garbage/>
+          <Grid gridWidth={6} gridHeight={12}/>
+          {group}
+        </div>
       </div>
     )
   }

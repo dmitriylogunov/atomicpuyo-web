@@ -1,22 +1,22 @@
 import React from 'react';
-import Group from './group';
+import Block from './block';
 
-class Queue extends React.Component<{}, { queue: Array<Group> }> {
-  private readonly length: number = 2;
+type QueueProps = {
+  queueData: Array<Block>,
+}
 
-  constructor(props) {
+class Queue extends React.Component<QueueProps, {}> {
+
+  constructor(props: QueueProps) {
     super(props);
 
-    let queue: Array<Group> = Array(this.length);
-    for (let i = 0; i < this.length; i++) {
-      queue[i] = new Group(Group.type_);
-    }
+    // let queue: Array<Group> = Array(this.length);
+    // for (let i = 0; i < this.length; i++) {
+    //   queue[i] = new Group(Group.type_);
+    // }
   }
 
-  public next(): Group {
-    return this.state.queue[0];
 
-  }
 }
 
 export default Queue;
