@@ -1,7 +1,6 @@
 import React from 'react';
 import Grid, { GridData } from './grid';
 import Garbage from './garbage'
-import Group from "./group";
 
 type PlayerProps = {
   id: string,
@@ -22,18 +21,18 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   constructor(props: PlayerProps) {
     super(props);
 
-    let data: Array<number> = new Array<number>(this.props.fieldHeight * this.props.fieldWidth).fill(Grid.emptyCell);
+    let data: Array<number> = new Array<number>(this.props.fieldHeight * this.props.fieldWidth).fill(GridData.emptyCell);
 
     // for debugging layout
     // for (let i = 0; i < data.length; i++) {
     //   data[i] = Math.floor(Math.random() * 6);
     // }
 
-    let gridData: GridData = {
-      width: this.props.fieldWidth,
-      height: this.props.fieldHeight,
-      data: data
-    }
+    let gridData: GridData = new GridData(
+      this.props.fieldWidth,
+      this.props.fieldHeight,
+      data
+    );
 
     this.state = {
       gridData: gridData
@@ -48,7 +47,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
 
   render(): JSX.Element {
     let group = '';
-
+    let gridData = this.state.gridData;
 
     return (
       <div>
@@ -56,7 +55,7 @@ class Player extends React.Component<PlayerProps, PlayerState> {
         <div className="field">
           <Garbage/>
           <Grid
-            gridData={this.state.gridData}
+            gridData={gridData}
           />
           {group}
         </div>

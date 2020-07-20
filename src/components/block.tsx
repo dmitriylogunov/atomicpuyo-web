@@ -1,13 +1,6 @@
 import React from "react";
 import _ from 'lodash';
 import Grid, {GridData} from "./grid";
-import Puyo from "./puyo";
-
-// type BlockData = Array<{
-//   y: number,
-//   x: number,
-//   color: number,
-// }>
 
 type BlockProps = {
   numberOfColors: number,
@@ -48,11 +41,11 @@ class Block extends React.Component<BlockProps, BlockState> {
 
     let blockTypeCount: number = params.blockTypeCount ? params.blockTypeCount : Block.maxBlockTypeCount;
     let data: Array<number> = this.getBlockGrid(params.numberOfColors, _.random(0, blockTypeCount - 1));
-    let gridData = {
-      width: this.blockWidth,
-      height: this.blockHeight,
-      data: data
-    }
+    let gridData = new GridData(
+      this.blockWidth,
+      this.blockHeight,
+      data
+    );
 
     this.setState({
       gridData: gridData,
@@ -68,14 +61,16 @@ class Block extends React.Component<BlockProps, BlockState> {
   }
 
   private getBlockGrid(numberOfColors: number, blockType: number): Array<number> {
+    let emptyCell: number = GridData.emptyCell;
+
     switch (blockType) {
       case Block.typeIBlock: {
         let color1: number = _.random(1, numberOfColors);
         let color2: number = _.random(1, numberOfColors);
         return ([
-          color1, Grid.emptyCell, Grid.emptyCell,
-          color2, Grid.emptyCell, Grid.emptyCell,
-          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+          color1, emptyCell, emptyCell,
+          color2, emptyCell, emptyCell,
+          emptyCell, emptyCell, emptyCell
         ]);
         // return [
         //   {
@@ -94,9 +89,9 @@ class Block extends React.Component<BlockProps, BlockState> {
         let color1: number = _.random(1, numberOfColors);
         let color2: number = _.random(1, numberOfColors);
         return ([
-          color1, Grid.emptyCell, Grid.emptyCell,
-          color2, color2, Grid.emptyCell,
-          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+          color1, emptyCell, emptyCell,
+          color2, color2, emptyCell,
+          emptyCell, emptyCell, emptyCell
         ]);
         // return [
         //   {
@@ -122,9 +117,9 @@ class Block extends React.Component<BlockProps, BlockState> {
         while (color1 == color2) {
           color2 = _.random(0, numberOfColors);
         }
-        return [color1, color2, Grid.emptyCell,
-          color1, color2, Grid.emptyCell,
-          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        return [color1, color2, emptyCell,
+          color1, color2, emptyCell,
+          emptyCell, emptyCell, emptyCell
         ];
         // return [
         //   {
@@ -151,9 +146,9 @@ class Block extends React.Component<BlockProps, BlockState> {
       }
       case Block.typeOBlock: {
         let color: number = _.random(0, numberOfColors);
-        return [color, color, Grid.emptyCell,
-          color, color, Grid.emptyCell,
-          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        return [color, color, emptyCell,
+          color, color, emptyCell,
+          emptyCell, emptyCell, emptyCell
         ];
         // return [
         //   {
@@ -178,7 +173,6 @@ class Block extends React.Component<BlockProps, BlockState> {
         //   },
         // ]
       }
-
       default:
         throw 'Requested block type is out of supported range';
     }
