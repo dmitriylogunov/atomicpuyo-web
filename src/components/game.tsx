@@ -1,6 +1,7 @@
 import React, {useState, useEffect}  from 'react';
 import Player from './player';
 import './../styles/game.scss';
+import Grid from "./grid";
 
 class Game extends React.Component<{},{}> {
   // @ts-ignore
@@ -68,6 +69,8 @@ class Game extends React.Component<{},{}> {
           key={player.id}
           id={player.id}
           name={player.name}
+          fieldWidth={6}
+          fieldHeight={12}
           // onGarbageGenerated=this.handleNewGarbage()
         /></div>
       )

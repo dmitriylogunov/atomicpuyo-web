@@ -1,6 +1,6 @@
 import React from "react";
 import _ from 'lodash';
-import Grid from "./grid";
+import Grid, {GridData} from "./grid";
 import Puyo from "./puyo";
 
 // type BlockData = Array<{
@@ -9,15 +9,13 @@ import Puyo from "./puyo";
 //   color: number,
 // }>
 
-type BlockData = Array<number>;
-
 type BlockProps = {
   numberOfColors: number,
   blockTypeCount: number | undefined,
 }
 
 type BlockState = {
-  data: BlockData,
+  gridData: GridData,
 }
 
 class Block extends React.Component<BlockProps, BlockState> {
@@ -41,50 +39,44 @@ class Block extends React.Component<BlockProps, BlockState> {
 
   public static readonly maxBlockTypeCount = 4;
 
+  private readonly blockWidth: number = 3;
+  private readonly blockHeight: number = 3;
+
+
   constructor(params: BlockProps) {
     super(params);
 
     let blockTypeCount: number = params.blockTypeCount ? params.blockTypeCount : Block.maxBlockTypeCount;
-    let data: BlockData = this.getBlockData(params.numberOfColors, _.random(0, blockTypeCount - 1));
+    let data: Array<number> = this.getBlockGrid(params.numberOfColors, _.random(0, blockTypeCount - 1));
+    let gridData = {
+      width: this.blockWidth,
+      height: this.blockHeight,
+      data: data
+    }
 
     this.setState({
-      data: data,
+      gridData: gridData,
     })
   }
 
   render(): JSX.Element {
-    const puyos = this.state.data.map((type, index, data) => {
-      const puyo = <Puyo
-        type={type}
-        connectTop={false}
-        connectBottom={false}
-        connectLeft={false}
-        connectRight={false} />
-
-      return (
-        <li key={index}>
-          {puyo}
-        </li>
-      );
-
-    });
-
-
     return (
       <div className="block">
-        {puyos}
+        <Grid gridData={this.state.gridData} />
       </div>
     );
   }
 
-  private getBlockData(numberOfColors: number, blockType: number): BlockData {
+  private getBlockGrid(numberOfColors: number, blockType: number): Array<number> {
     switch (blockType) {
       case Block.typeIBlock: {
         let color1: number = _.random(1, numberOfColors);
         let color2: number = _.random(1, numberOfColors);
-        return [
-          color1, Grid.emptyCell, color2, Grid.emptyCell
-        ]
+        return ([
+          color1, Grid.emptyCell, Grid.emptyCell,
+          color2, Grid.emptyCell, Grid.emptyCell,
+          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        ]);
         // return [
         //   {
         //     y: 0,
@@ -101,7 +93,11 @@ class Block extends React.Component<BlockProps, BlockState> {
       case Block.typeLBlock: {
         let color1: number = _.random(1, numberOfColors);
         let color2: number = _.random(1, numberOfColors);
-        return [color1, Grid.emptyCell, color2, color2];
+        return ([
+          color1, Grid.emptyCell, Grid.emptyCell,
+          color2, color2, Grid.emptyCell,
+          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        ]);
         // return [
         //   {
         //     y: 0,
@@ -126,7 +122,10 @@ class Block extends React.Component<BlockProps, BlockState> {
         while (color1 == color2) {
           color2 = _.random(0, numberOfColors);
         }
-        return [color1, color2, color1, color2];
+        return [color1, color2, Grid.emptyCell,
+          color1, color2, Grid.emptyCell,
+          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        ];
         // return [
         //   {
         //     y: 0,
@@ -152,7 +151,10 @@ class Block extends React.Component<BlockProps, BlockState> {
       }
       case Block.typeOBlock: {
         let color: number = _.random(0, numberOfColors);
-        return Array(4).fill(color);
+        return [color, color, Grid.emptyCell,
+          color, color, Grid.emptyCell,
+          Grid.emptyCell, Grid.emptyCell, Grid.emptyCell
+        ];
         // return [
         //   {
         //     y: 0,
