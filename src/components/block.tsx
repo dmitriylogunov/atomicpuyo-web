@@ -1,6 +1,7 @@
 import React from "react";
 import _ from 'lodash';
-import Grid, {GridData} from "./grid";
+import Grid from "./grid";
+import GroupData from "../classes/groupdata";
 
 type BlockProps = {
   numberOfColors: number,
@@ -8,7 +9,7 @@ type BlockProps = {
 }
 
 type BlockState = {
-  gridData: GridData,
+  gridData: GroupData,
 }
 
 class Block extends React.Component<BlockProps, BlockState> {
@@ -41,7 +42,7 @@ class Block extends React.Component<BlockProps, BlockState> {
 
     let blockTypeCount: number = params.blockTypeCount ? params.blockTypeCount : Block.maxBlockTypeCount;
     let data: Array<number> = this.getBlockGrid(params.numberOfColors, _.random(0, blockTypeCount - 1));
-    let gridData = new GridData(
+    let gridData = new GroupData(
       this.blockWidth,
       this.blockHeight,
       data
@@ -55,13 +56,13 @@ class Block extends React.Component<BlockProps, BlockState> {
   render(): JSX.Element {
     return (
       <div className="block">
-        <Grid gridData={this.state.gridData} />
+        <Grid gridData={this.state.gridData} blockData={undefined} />
       </div>
     );
   }
 
   private getBlockGrid(numberOfColors: number, blockType: number): Array<number> {
-    let emptyCell: number = GridData.emptyCell;
+    let emptyCell: number = GroupData.emptyCell;
 
     switch (blockType) {
       case Block.typeIBlock: {
