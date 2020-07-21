@@ -1,7 +1,9 @@
 import React from 'react';
-import Grid, { LinkedBlock } from './grid';
+import Grid from './grid';
 import GroupData from "../classes/groupdata";
 import Garbage from './garbage'
+import Timer from "../classes/timer";
+import BlockData from "../classes/blockdata";
 
 type PlayerProps = {
   id: string,
@@ -9,16 +11,26 @@ type PlayerProps = {
   // onGarbageGenerated: ((count: number): void => void)
   fieldWidth: number,
   fieldHeight: number,
+  numberOfColors: number
 };
 
 type PlayerState = {
   gridData: GroupData,
-  blockData: LinkedBlock | undefined
+  blockData: BlockData | undefined
 };
 
 class Player extends React.Component<PlayerProps, PlayerState> {
+  private timer: Timer | undefined;
 
-  private readonly  = 3;
+  componentDidMount() {
+    this.timer = new Timer(this.handleGameTimer, 1000);
+  }
+
+  componentWillUnmount() {
+    if (this.timer) {
+      this.timer.destroy();
+    }
+  }
 
   constructor(props: PlayerProps) {
     super(props);
@@ -43,7 +55,9 @@ class Player extends React.Component<PlayerProps, PlayerState> {
   }
 
   public handleGameTimer() {
-
+    if (!this.state.blockData) {
+      const blockData = new BlockData(this.props.numberOfColors);
+    }
   }
 
   render(): JSX.Element {
@@ -54,7 +68,9 @@ class Player extends React.Component<PlayerProps, PlayerState> {
           <Garbage/>
           <Grid
             gridData={this.state.gridData}
-            blockData={this.state.blockData}
+            linkedBlock = {this.state.blockData}
+            blockXPix = {0}
+            blockYPix = {0}
           />
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import Block from './block';
+import BlockData from "../classes/blockdata";
 
 type QueueProps = {
-  queueData: Array<Block>,
+  queueData: Array<BlockData>,
 }
 
 class Queue extends React.Component<QueueProps, {}> {

@@ -1,16 +1,15 @@
 import React from 'react';
 import Puyo from './puyo';
 import GroupData from "../classes/groupdata";
-
-export type LinkedBlock = {
-  xFloat: number,
-  yFloat: number,
-  group: GroupData
-}
+import CSS from 'csstype';
+import {GamePixel, getGridValueOfGamePixel} from "../classes/gamepixel";
+import BlockData from "../classes/blockdata";
 
 type GridProps = {
   gridData: GroupData,
-  blockData: LinkedBlock | undefined
+  linkedBlock?: BlockData,
+  blockXPix?: number,
+  blockYPix?: number
 };
 
 type GridState = {
@@ -38,12 +37,27 @@ class Grid extends React.Component<GridProps, GridState> {
       );
     });
 
-    const linkedGroup =
-      <div>TEST</div>;
+    const blockStyles: CSS.Properties = (this.props.linkedBlock && this.props.blockXPix && this.props.blockYPix)
+      ?
+      {
+        top: getGridValueOfGamePixel(this.props.blockXPix).toString() + "px",
+        left: getGridValueOfGamePixel(this.props.blockYPix).toString() + "px",
+      }
+      :
+      {}
+
+    const block = (this.props.linkedBlock)
+      ?
+        <div style={blockStyles} className="block">
+          <Grid gridData={this.props.linkedBlock.getGrid()} />
+        </div>
+
+      :
+      '';
 
     return (
       <ol className="grid">
-        {linkedGroup}
+        {block}
         {grid}
       </ol>
     )

@@ -1,15 +1,11 @@
-import React, {useState, useEffect}  from 'react';
+import React from 'react';
 import Player from './player';
 import './../styles/game.scss';
-import Grid from "./grid";
 
 class Game extends React.Component<{},{}> {
-  // @ts-ignore
-  private gameCycleInterval: NodeJS.Timeout
   private players: Array<Player> = [];
 
   componentDidMount() {
-    this.handleInitialise();
     this.handleComponentUpdate();
   }
 
@@ -18,26 +14,13 @@ class Game extends React.Component<{},{}> {
   }
 
   componentWillUnmount() {
-    this.handleCloseOfApplication();
-  }
-
-  private handleInitialise() {
-    this.gameCycleInterval = setInterval(this.handleGameCycle, 1000);
-
-
-  }
-
-  private handleGameCycle(): void {
-
+    // handle close of application here
   }
 
   private handleComponentUpdate(): void {
     // e.g. document.title = `${this.state.player1Score}`;
   }
 
-  private handleCloseOfApplication() {
-    clearInterval(this.gameCycleInterval);
-  }
 
   constructor(props: object) {
     super(props);
@@ -71,6 +54,7 @@ class Game extends React.Component<{},{}> {
           name={player.name}
           fieldWidth={6}
           fieldHeight={12}
+          numberOfColors={4}
           // onGarbageGenerated=this.handleNewGarbage()
         /></div>
       )

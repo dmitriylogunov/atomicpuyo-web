@@ -4,7 +4,7 @@ export type Projection = Array<{
   color: number,
 }>
 
-export class GroupData {
+class GroupData {
   constructor(width: number, height: number, data: Array<number>) {
     this.width = width;
     this.height = height;
