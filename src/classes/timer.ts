@@ -2,7 +2,7 @@ export class Timer {
   private timerRef: number;
 
   constructor(callback: TimerHandler ,interval: number) {
-    this.timerRef = setInterval(callback, 1000);
+    this.timerRef = setInterval(callback, interval);
   }
 
   public destroy() {

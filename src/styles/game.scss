@@ -1,7 +1,8 @@
-$cellWidth: 3em;
+$cellDimension: 3em;
 $padding: 1em;
-$cellHeight: $cellWidth;
+
 $rowWidth: 6;
+$blockWidth: 3;
 
 $puyocolor1: red;
 $puyocolor2: green;
@@ -18,8 +19,8 @@ $player2bgColor: #cd5e71;
   border: 1px solid saturate($color, 100%);
   border-radius: 50%;
   background-color: desaturate($color, 50%);
-  height: $cellHeight;
-  width: $cellWidth;
+  height: $cellDimension;
+  width: $cellDimension;
   box-sizing: border-box;
   //background-image: url('/icon192.png');
   //background-repeat: no-repeat;
@@ -78,9 +79,18 @@ $player2bgColor: #cd5e71;
     float: left;
     margin: $padding;
 
+    .block {
+      overflow: visible;
+      width: $blockWidth * $cellDimension;
+      ol {
+        float: left;
+      }
+      background: transparent;
+    }
+
     .garbage {
-      width: $cellWidth * $rowWidth;
-      height: $cellHeight + $padding*2;
+      width: $cellDimension * $rowWidth;
+      height: $cellDimension + $padding*2;
       box-sizing: content-box;
       padding-top: $padding;
     }
@@ -88,8 +98,12 @@ $player2bgColor: #cd5e71;
     .field {
       border-width: 2px;
       border-style: solid;
-      width: $cellWidth * $rowWidth;
+      width: $cellDimension * $rowWidth;
       box-sizing: content-box;
+
+      .block {
+        position: relative;
+      }
 
       ol.grid {
         text-decoration: none;
@@ -99,7 +113,7 @@ $player2bgColor: #cd5e71;
       .grid {
         display: flex;
         flex-flow: row wrap;
-        width: $cellWidth * 6;
+        width: $cellDimension * 6;
         border: 0;
         overflow: hidden;
         margin: 0;
@@ -107,12 +121,12 @@ $player2bgColor: #cd5e71;
 
         .cell {
           margin: 0;
-          height: $cellHeight;
-          width: $cellWidth;
+          height: $cellDimension;
+          width: $cellDimension;
 
           @mixin puyoCellBackground($color) {
             background-color: rgba($color, 0.5);
-            box-shadow: 0 0 $cellWidth/2 0 $color;
+            box-shadow: 0 0 $cellDimension/2 0 $color;
           }
 
           &.cell-empty {

@@ -1,9 +1,23 @@
 import GroupData from "./groupdata";
 import _ from "lodash";
+import GamePixel from "./gamepixel";
 
 class BlockData {
   private data: GroupData;
 
+  // I-block - two Puyo starting vertically rotate around the lower one. They may be of
+  // the same or different color.
+  //
+  // L-block - three Puyo in an L-shape rotate around the one in the corner. They may
+  // either all be of the same color, or there will be a vertical same-color pair and
+  // a single Puyo in a different color on the lower-right.
+  //
+  // II-block - four Puyo in a square rotate around the center. The left two Puyo are
+  // the same color as each other and so are the right two Puyo. The two sides will
+  // never be the same color as each other.
+  //
+  // O-block - four Puyo in a square do not rotate and are all the same color. You
+  // can change the color by attempting to rotate the Puyo.
   public static readonly typeIBlock = 0;
   public static readonly typeLBlock = 1;
   public static readonly typeIIBlock = 2;
@@ -11,31 +25,21 @@ class BlockData {
 
   public static readonly maxBlockTypeCount = 4;
 
-  private readonly blockWidth: number = 3;
-  private readonly blockHeight: number = 3;
+  private static readonly blockWidth: number = 3;
+  private static readonly blockHeight: number = 3;
 
-  constructor(numberOfColors: number,  blockTypeCount?: number) {
-    // I-block - two Puyo starting vertically rotate around the lower one. They may be of
-    // the same or different color.
-    //
-    // L-block - three Puyo in an L-shape rotate around the one in the corner. They may
-    // either all be of the same color, or there will be a vertical same-color pair and
-    // a single Puyo in a different color on the lower-right.
-    //
-    // II-block - four Puyo in a square rotate around the center. The left two Puyo are
-    // the same color as each other and so are the right two Puyo. The two sides will
-    // never be the same color as each other.
-    //
-    // O-block - four Puyo in a square do not rotate and are all the same color. You
-    // can change the color by attempting to rotate the Puyo.
+  public blockPixelX: GamePixel;
+  public blockPixelY: GamePixel;
 
-
+  constructor(numberOfColors: number, blockPixelX: GamePixel, blockPixelY: GamePixel, blockTypeCount?: number) {
+    this.blockPixelX = blockPixelX;
+    this.blockPixelY = blockPixelY;
     let blockTypeCount0: number = blockTypeCount ? blockTypeCount : BlockData.maxBlockTypeCount;
-    let data: Array<number> = this.getBlockGrid(numberOfColors, _.random(0, blockTypeCount0 - 1));
 
+    let data: Array<number> = this.getBlockGrid(numberOfColors, _.random(0, blockTypeCount0 - 1));
     this.data = new GroupData(
-      this.blockWidth,
-      this.blockHeight,
+      BlockData.blockWidth,
+      BlockData.blockHeight,
       data
     );
   }
@@ -160,6 +164,10 @@ class BlockData {
 
   public getGrid(): GroupData {
     return this.data;
+  }
+
+  public advanceBlockInPixels(pixels: GamePixel): void {
+    this.blockPixelY+=pixels;
   }
 
   public rotateCW(): void {

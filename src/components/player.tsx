@@ -4,26 +4,38 @@ import GroupData from "../classes/groupdata";
 import Garbage from './garbage'
 import Timer from "../classes/timer";
 import BlockData from "../classes/blockdata";
+import GamePixel, {cellDimensionInGamePixels, getGridValueOfGamePixel} from "../classes/gamepixel";
 
-type PlayerProps = {
+interface PlayerProps {
   id: string,
   name: string,
   // onGarbageGenerated: ((count: number): void => void)
   fieldWidth: number,
   fieldHeight: number,
-  numberOfColors: number
+  numberOfColors: number,
+  gameSpeed: number,
 };
 
 type PlayerState = {
   gridData: GroupData,
-  blockData: BlockData | undefined
+  blockData?: BlockData,
 };
 
 class Player extends React.Component<PlayerProps, PlayerState> {
   private timer: Timer | undefined;
 
   componentDidMount() {
-    this.timer = new Timer(this.handleGameTimer, 1000);
+    const blockData = new BlockData(
+      this.props.numberOfColors,
+      2 * cellDimensionInGamePixels,
+      0
+    );
+
+    this.setState({
+      blockData: blockData,
+    })
+
+    // this.timer = new Timer(this.handleGameTimer.bind(this), 50);
   }
 
   componentWillUnmount() {
@@ -50,27 +62,34 @@ class Player extends React.Component<PlayerProps, PlayerState> {
 
     this.state = {
       gridData: gridData,
-      blockData: undefined
+      blockData: undefined,
     }
   }
 
   public handleGameTimer() {
-    if (!this.state.blockData) {
-      const blockData = new BlockData(this.props.numberOfColors);
-    }
+    // Intentionally not copying instances for better performance
+    const gridData = this.state.gridData;
+    const blockData = this.state.blockData;
+
+    // blockData.advanceBlockInPixels(this.props.gameSpeed);
+
+    this.setState(
+      {
+        blockData: blockData
+      }
+    );
+    //this.advanceBlockInPixels(2);
   }
 
   render(): JSX.Element {
     return (
-      <div>
+      <div className={"player player" + this.props.id}>
         <div className="queue" />
         <div className="field">
           <Garbage/>
           <Grid
-            gridData={this.state.gridData}
+            gridData = {this.state.gridData}
             linkedBlock = {this.state.blockData}
-            blockXPix = {0}
-            blockYPix = {0}
           />
         </div>
       </div>

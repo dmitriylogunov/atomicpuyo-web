@@ -1,6 +1,7 @@
 import React from 'react';
 import Player from './player';
 import './../styles/game.scss';
+import Gamecontrols from "./gamecontrols";
 
 class Game extends React.Component<{},{}> {
   private players: Array<Player> = [];
@@ -48,21 +49,26 @@ class Game extends React.Component<{},{}> {
 
     const players = playerData.map((player) => {
       return (
-        <div className={"player player" + player.id}><Player
+        <Player
           key={player.id}
           id={player.id}
           name={player.name}
           fieldWidth={6}
           fieldHeight={12}
           numberOfColors={4}
+          gameSpeed={2}
           // onGarbageGenerated=this.handleNewGarbage()
-        /></div>
+        />
       )
     });
 
     return (
       <div className="game">
         {players}
+        <Gamecontrols
+          onResume={"A"}
+          onPause={"B"}
+        />
       </div>
     )
   }
