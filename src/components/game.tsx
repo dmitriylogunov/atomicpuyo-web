@@ -3,11 +3,19 @@ import Player from './player';
 import './../styles/game.scss';
 import Gamecontrols from "./gamecontrols";
 
-class Game extends React.Component<{},{}> {
+interface GameProps {
+  timerFrequency?: number
+}
+
+class Game extends React.Component<GameProps,{}> {
   private players: Array<Player> = [];
 
   componentDidMount() {
     this.handleComponentUpdate();
+
+    // TODO
+    // let elementRef = ...;
+    // set el height and width etc.
   }
 
   componentDidUpdate() {
@@ -22,8 +30,7 @@ class Game extends React.Component<{},{}> {
     // e.g. document.title = `${this.state.player1Score}`;
   }
 
-
-  constructor(props: object) {
+  constructor(props: GameProps) {
     super(props);
 
     this.state = {
@@ -55,7 +62,7 @@ class Game extends React.Component<{},{}> {
           name={player.name}
           fieldWidth={6}
           fieldHeight={12}
-          numberOfColors={4}
+          coloursCount={4}
           gameSpeed={2}
           // onGarbageGenerated=this.handleNewGarbage()
         />

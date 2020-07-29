@@ -1,112 +1,131 @@
 import React from 'react';
-import ReactDom from 'react-dom';
 import Puyo from './puyo';
-import GroupData from "../classes/groupdata";
-import CSS from 'csstype';
-import GamePixel, {cellDimensionInGamePixels} from "../classes/gamepixel";
-import BlockData from "../classes/blockdata";
-import Timer from "../classes/timer";
+
+export type GridData = Array<number>;
+export const invalidCell: number = -1;
+export const emptyCell: number = 0;
 
 interface GridProps {
-  gridData: GroupData,
-  linkedBlock?: BlockData
-  timerFrequency?: number
+  width: number,
+  height: number,
+  data: GridData,
 };
 
 interface GridState {
 };
 
 class Grid extends React.Component<GridProps, GridState> {
-  readonly gamePixelWidth = Math.floor(300 / cellDimensionInGamePixels) / 100;
-  readonly gamePixelHeight = this.gamePixelWidth;
 
-  private timer?: Timer;
-  private blockComponent?: Grid | null;
-  private blockElement?: Element | Text | null;
-
-    constructor(props: GridProps) {
+  constructor(props: GridProps) {
     super(props);
-
   }
 
-  componentDidMount() {
-      console.log("did mount");
-
-    if (!this.timer) {
-      this.timer = new Timer(this.timerHandler.bind(this), 50);
-    }
 
 
+  public getCellToTop(index: number): number {
+    return this.getCell(index - this.props.width);
   }
 
-  componentDidUpdate(prevProps: Readonly<GridProps>, prevState: Readonly<GridState>, snapshot?: any) {
-      console.log("did update");
-
-    if (prevProps.linkedBlock!==this.props.linkedBlock) {
-      if (this.blockComponent) {
-        this.blockElement = ReactDom.findDOMNode(this.blockComponent);
-        debugger;
-      }
-    }
+  public getCellToBottom(index: number): number {
+    return this.getCell(index + this.props.width);
   }
 
-  componentWillUnmount() {
-    if (this.timer) {
-      this.timer.destroy();
-    }
+  public getCellToLeft(index: number): number {
+    let isLeftmostCell = index % this.props.width == 0;
+
+    return (isLeftmostCell)
+      ? invalidCell
+      : this.getCell(index - 1);
   }
 
-  private top = 0;
+  public getCellToRight(index: number): number {
+    let isRightmostCell = index % this.props.width == this.props.width - 1;
 
-  timerHandler(): void {
-    this.top+=3/16;
-    if (this.blockElement) {
-      // this.blockElement.style.top = this.top + "em";
-    }
+    return (isRightmostCell)
+      ? invalidCell
+      : this.getCell(index + 1);
   }
+
+  public getCell(index: number): number {
+    return (index >= 0 && index < this.props.data.length)
+      ? this.props.data[index]
+      : invalidCell
+  }
+
+
+  // TODO use or delete these functions
+
+  // public setCell(index: number, newCell: number): number {
+  //   if (index >= 0 && index < this.data.length) {
+  //     this.data[index] = newCell
+  //     return newCell;
+  //   } else {
+  //     this.data[index] = GroupData.invalidCell
+  //     return GroupData.invalidCell;
+  //   }
+  // }
+
+
+  // private merge(targetX: number, targetY: number, childGrid: GroupData) {
+  //   let x = targetX;
+  //   let y = targetY;
+  //
+  //   let width = childGrid.width;
+  //   let height = childGrid.height;
+  //
+  //   for (let i=0;i<childGrid.data.length;i++) {
+  //     if (x>width) {
+  //       x = targetX;
+  //       y++;
+  //     }
+  //     if (y>childGrid.height) {
+  //       break;
+  //     }
+  //     if (x>this.width) {
+  //       x++;
+  //       continue;
+  //     }
+  //     this.data[x + y * this.width] = childGrid.data[i];
+  //   }
+  // }
+
+  // public isOverlap(x: number, y: number, parentGrid: GroupData): boolean {
+  //   // TODO
+  //   let isOverlap: boolean = false;
+  //
+  //   return isOverlap;
+  // }
+
+  // public getProjection(x: number, y: number, parentGrid: GroupData): Projection {
+  //   // TODO return projection of block onto
+  //   let projection: Projection = Array(0);
+  //
+  //   return projection;
+  // }
 
   render(): JSX.Element {
-    const grid = this.props.gridData.data.map((type, index) => {
-      const puyo = (type == GroupData.emptyCell)
+    const grid = this.props.data.map((type, index) => {
+      const puyo = (type == emptyCell)
         ? ''
         : <Puyo
           type={type}
-          connectTop={type == this.props.gridData.getCellToTop(index)}
-          connectBottom={type == this.props.gridData.getCellToBottom(index)}
-          connectLeft={type == this.props.gridData.getCellToLeft(index)}
-          connectRight={type == this.props.gridData.getCellToRight(index)}
+          connectTop={type == this.getCellToTop(index)}
+          connectBottom={type == this.getCellToBottom(index)}
+          connectLeft={type == this.getCellToLeft(index)}
+          connectRight={type == this.getCellToRight(index)}
         />
 
       let className
         = 'cell'
-        + ' cell-' + ((type == GroupData.emptyCell) ? 'empty' : 'withpuyo type' + type.toString());
+        + ' cell-' + ((type == emptyCell) ? 'empty' : 'withpuyo type' + type.toString());
 
       return (
         <li key={index} className={className}>{puyo}</li>
       );
     });
 
-    const blockStyles: CSS.Properties = (this.props.linkedBlock)
-      ?
-      {
-        top: (this.props.linkedBlock.blockPixelY * this.gamePixelHeight).toString() + "em",
-        left: (this.props.linkedBlock.blockPixelX * this.gamePixelWidth).toString() + "em",
-      }
-      :
-      {}
-
-    const block = (this.props.linkedBlock)
-      ?
-        <div style={blockStyles} className="block">
-          <Grid gridData={this.props.linkedBlock.getGrid()} ref={element => this.blockComponent = element}/>
-        </div>
-
-      :
-      '';
-
     return (
       <ol className="grid">
-        {block}
         {grid}
       </ol>
     )
