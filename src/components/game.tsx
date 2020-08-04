@@ -3,12 +3,26 @@ import Player from './player';
 import './../styles/game.scss';
 import Gamecontrols from "./gamecontrols";
 
+export const GameContext = React.createContext({
+  colorCount: 4,
+  groupTypeCount: 4,
+  fieldWidth: 6,
+  fieldHeight: 12,
+});
+
 interface GameProps {
-  timerFrequency?: number
 }
 
-class Game extends React.Component<GameProps,{}> {
-  private players: Array<Player> = [];
+type PlayerData = {
+  id: string;
+  name: string;
+}
+
+interface GameState {
+  playersData: Array<PlayerData>;
+}
+
+class Game extends React.Component<GameProps, GameState> {
 
   componentDidMount() {
     this.handleComponentUpdate();
@@ -34,49 +48,50 @@ class Game extends React.Component<GameProps,{}> {
     super(props);
 
     this.state = {
+      playersData: [
+        {
+          id: "1",
+          name: "Ann"
+        },
+        {
+          id: "2",
+          name: "Joe"
+        }
+      ]
     }
   }
 
   render(): JSX.Element {
-    interface PlayerData {
-      id: string;
-      name: string;
-    }
 
-    const playerData: Array<PlayerData> = [
-      {
-        id: "1",
-        name: "Ann"
-      },
-      {
-        id: "2",
-        name: "Joe"
-      }
-    ]
-
-    const players = playerData.map((player) => {
+    const players = this.state.playersData.map((player) => {
       return (
         <Player
           key={player.id}
           id={player.id}
           name={player.name}
-          fieldWidth={6}
-          fieldHeight={12}
-          coloursCount={4}
-          gameSpeed={2}
           // onGarbageGenerated=this.handleNewGarbage()
         />
       )
     });
 
     return (
-      <div className="game">
-        {players}
-        <Gamecontrols
-          onResume={"A"}
-          onPause={"B"}
-        />
-      </div>
+      <GameContext.Provider value={
+        {
+          colorCount: 4,
+          groupTypeCount: 4,
+          fieldWidth: 6,
+          fieldHeight: 12
+        }
+      }
+      >
+        <div className="game">
+          {players}
+          <Gamecontrols
+            onResume={"A"}
+            onPause={"B"}
+          />
+        </div>
+      </GameContext.Provider>
     )
   }
 }

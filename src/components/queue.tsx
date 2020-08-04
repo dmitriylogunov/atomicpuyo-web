@@ -1,22 +1,22 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Group from "./group";
+import _ from "lodash";
+import QueueData from "../classes/queueData";
 
-type QueueProps = {
-  queueData: Array<Group>,
+interface QueueProps {
+  queueData: QueueData;
 }
 
-class Queue extends React.Component<QueueProps, {}> {
+const Queue = (props: QueueProps) => {
+    const queueDataArray = props.queueData.getData();
+    const queue: Array<JSX.Element> = queueDataArray.map(item => (<Group groupType={item}/>));
 
-  constructor(props: QueueProps) {
-    super(props);
-
-    // let queue: Array<Group> = Array(this.length);
-    // for (let i = 0; i < this.length; i++) {
-    //   queue[i] = new Group(Group.type_);
-    // }
+    return (
+      <div className={"queue"}>
+        {queue}
+      </div>
+    )
   }
 
-
-}
 
 export default Queue;

@@ -110,7 +110,7 @@ $player2bgColor: #cd5e71;
         list-style-type: none;
       }
 
-      .grid {
+      .grid .cells {
         display: flex;
         flex-flow: row wrap;
         width: $cellDimension * 6;

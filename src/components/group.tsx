@@ -1,6 +1,8 @@
-import React from "react";
-import Grid, {GridData, emptyCell, invalidCell} from "./grid";
+import React, {useContext, useState} from "react";
+import Grid from "./grid";
 import _ from "lodash";
+import GridData, {emptyCell} from "../classes/gridData";
+import {GameContext} from "./game";
 
 // I-block - two Puyo starting vertically rotate around the lower one. They may be of
 // the same or different color.
@@ -20,44 +22,25 @@ export const groupTypeLBlock = 1;
 export const groupTypeIIBlock = 2;
 export const groupTypeOBlock = 3;
 
-export const maxBlockTypeCount = 4;
+const groupWidth = 3;
+const groupHeight = 3;
 
-const gridWidth = 3;
-const gridHeight = 3;
-
-const cellToGroupDimensionRatio = 16;
-
-interface GroupProps {
-  x: number;
-  y: number;
-  colorsCount: number;
+export interface GroupProps {
   groupType: number;
-  isVisible: boolean;
 }
 
 interface GroupState {
-  data: GridData
+  rotations: Array<GridData>,
+  currentRotation: number
 }
 
-class Group extends React.Component<GroupProps, GroupState> {
-  private static readonly blockWidth: number = 3;
-  private static readonly blockHeight: number = 3;
 
-  constructor(props: GroupProps) {
-    super(props);
+const getRotations = (data: GridData) => {
+  // TODO rotate
+  return new Array<GridData>(4).fill(data);
+}
 
-    const data = Group.getGroupData(
-      props.colorsCount,
-      props.groupType
-    );
-
-    this.state =
-    {
-      data: data
-    }
-  }
-
-  private static getGroupData(numberOfColors: number, blockType: number): Array<number> {
+const getGridDataOfGroup = (numberOfColors: number, blockType: number): Array<number> => {
     switch (blockType) {
       case groupTypeIBlock: {
         let color1: number = _.random(1, numberOfColors);
@@ -173,33 +156,61 @@ class Group extends React.Component<GroupProps, GroupState> {
     }
   }
 
-  public rotateCW(): void {
-    return;
-  }
+  // const rotateCW(): void {
+  //   const newRotation: number =
+  //     (this.state.currentRotation<3)
+  //       ? this.state.currentRotation + 1
+  //       : 0;
+  //
+  //   this.setState(
+  //     {
+  //       currentRotation: newRotation
+  //     }
+  //   )
+  // }
+  //
+  // public rotateCCW(): void {
+  //   const newRotation: number =
+  //     (this.state.currentRotation>0)
+  //       ? this.state.currentRotation - 1
+  //       : 3;
+  //
+  //   this.setState(
+  //     {
+  //       currentRotation: newRotation
+  //     }
+  //   )
+  // }
 
-  public rotateCCW(): void {
-    return;
-  }
+const Group = (props: GroupProps): JSX.Element => {
+  const context = useContext(GameContext);
 
-  private pixelToGridCoordinate(pixelCoordinate: number) {
-    return Math.floor(pixelCoordinate/cellToGroupDimensionRatio);
-  }
-
-  render(): JSX.Element {
-    const className = "group" + ((this.props.isVisible)?" group-visible":" group-hidden");
-
-    const groupData = this.state.data;
-
-    return(
-      <div className={className}>
-        <Grid
-          width={gridWidth}
-          height={gridHeight}
-          data={groupData}
-        />
-      </div>
+  const data: GridData = new GridData(
+    groupWidth,
+    groupHeight,
+    getGridDataOfGroup(
+      context.colorCount,
+      props.groupType
     )
-  }
+  );
+
+  const rotations = getRotations(data);
+
+  const [state, setState] = useState({
+    rotations: rotations,
+    currentRotation: 0
+  });
+
+  const className = "group";
+  const groupData = state.rotations[state.currentRotation];
+
+  return(
+    <div className={className}>
+      <Grid
+        data={groupData}
+      />
+    </div>
+  )
 }
 
 export default Group;
