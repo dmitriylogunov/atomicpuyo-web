@@ -1,7 +1,7 @@
 import React, {useContext, useState} from "react";
 import Grid from "./grid";
 import _ from "lodash";
-import GridData, {emptyCell} from "../classes/gridData";
+import Grid_data, {emptyCell} from "../classes/grid_data";
 import {GameContext} from "./game";
 
 // I-block - two Puyo starting vertically rotate around the lower one. They may be of
@@ -30,14 +30,14 @@ export interface GroupProps {
 }
 
 interface GroupState {
-  rotations: Array<GridData>,
+  rotations: Array<Grid_data>,
   currentRotation: number
 }
 
 
-const getRotations = (data: GridData) => {
+const getRotations = (data: Grid_data) => {
   // TODO rotate
-  return new Array<GridData>(4).fill(data);
+  return new Array<Grid_data>(4).fill(data);
 }
 
 const getGridDataOfGroup = (numberOfColors: number, blockType: number): Array<number> => {
@@ -185,7 +185,7 @@ const getGridDataOfGroup = (numberOfColors: number, blockType: number): Array<nu
 const Group = (props: GroupProps): JSX.Element => {
   const context = useContext(GameContext);
 
-  const data: GridData = new GridData(
+  const data: Grid_data = new Grid_data(
     groupWidth,
     groupHeight,
     getGridDataOfGroup(

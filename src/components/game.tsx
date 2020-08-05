@@ -1,25 +1,46 @@
-import React from 'react';
+import React, {KeyboardEvent} from 'react';
 import Player from './player';
 import './../styles/game.scss';
 import Gamecontrols from "./gamecontrols";
 
-export const GameContext = React.createContext({
+export type KeyboardCallback = (keyStrokeQueue: KeyboardEvent) => void;
+export type KeyboardSubscriber = (callback: KeyboardCallback) => void;
+
+const gameContextDefaults = {
   colorCount: 4,
   groupTypeCount: 4,
   fieldWidth: 6,
-  fieldHeight: 12,
+  fieldHeight: 12
+}
+
+export const GameContext = React.createContext({
+  ...gameContextDefaults,
+  keyboardSubscribe: (callback: KeyboardCallback) => {},
 });
 
-interface GameProps {
-}
 
 type PlayerData = {
   id: string;
   name: string;
 }
+type ActionEvent =
+  | {
+    type: "move",
+    xDiff: number,
+    yDiff: number
+  }
+  | {
+    type: "garbage",
+    count: number;
+  };
+
+interface GameProps {
+}
 
 interface GameState {
-  playersData: Array<PlayerData>;
+  playersData: Array<PlayerData>,
+  keyboardSubscribers: Array<KeyboardCallback>
+  actionQueue: Array<ActionEvent>;
 }
 
 class Game extends React.Component<GameProps, GameState> {
@@ -47,22 +68,51 @@ class Game extends React.Component<GameProps, GameState> {
   constructor(props: GameProps) {
     super(props);
 
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    const playersData = [
+      {
+        id: "1",
+        name: "Ann"
+      },
+      // {
+      //   id: "2",
+      //   name: "Joe"
+      // }
+    ];
+
+    const actionQueue = Array<ActionEvent>(0);
+    const keyboardSubscribers = Array<KeyboardCallback>(0);
+
     this.state = {
-      playersData: [
-        {
-          id: "1",
-          name: "Ann"
-        },
-        {
-          id: "2",
-          name: "Joe"
-        }
-      ]
+      playersData: playersData,
+      keyboardSubscribers: keyboardSubscribers,
+      actionQueue: actionQueue,
     }
   }
 
-  render(): JSX.Element {
+  private handleKeyDown = (
+    (event: KeyboardEvent<HTMLDivElement>) =>
+    {
+      event.preventDefault();
+      const keyboardSubscribers = this.state.keyboardSubscribers;
 
+      keyboardSubscribers.forEach((subscriber) => {
+        subscriber(event);
+      })
+    }
+  )
+
+  private handleKeyboardSubscribe(callback: KeyboardCallback) {
+    const keyboardSubscribers = this.state.keyboardSubscribers.slice();
+    keyboardSubscribers.push(callback);
+
+    this.setState({
+      keyboardSubscribers: keyboardSubscribers
+    })
+  }
+
+  render(): JSX.Element {
     const players = this.state.playersData.map((player) => {
       return (
         <Player
@@ -77,14 +127,12 @@ class Game extends React.Component<GameProps, GameState> {
     return (
       <GameContext.Provider value={
         {
-          colorCount: 4,
-          groupTypeCount: 4,
-          fieldWidth: 6,
-          fieldHeight: 12
+          ...gameContextDefaults,
+          keyboardSubscribe: this.handleKeyboardSubscribe
         }
       }
       >
-        <div className="game">
+        <div className="game" style={{height: '100vh', width: '100vw'}} onKeyDown={this.handleKeyDown}>
           {players}
           <Gamecontrols
             onResume={"A"}

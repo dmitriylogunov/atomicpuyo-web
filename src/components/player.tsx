@@ -1,24 +1,16 @@
-import React, {RefObject, useContext, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import _ from 'lodash';
 import Grid from './grid';
-import GridData, {emptyCell} from "../classes/gridData";
 import Garbage from './garbage'
-import Timer from "../classes/timer";
 import GroupController from "./groupcontroller";
-import {GameContext} from "./game";
-import QueueData from "../classes/queueData";
+import {GameContext, KeyboardCallback} from "./game";
+import QueueData from "../classes/queue_data";
+import GridData from "../classes/grid_data";
 
 interface PlayerProps {
   id: string;
   name: string;
   // onGarbageGenerated: ((count: number): void => void)
-};
-
-interface PlayerState {
-  gridData: GridData;
-  queueData: QueueData;
-  groupX: number;
-  groupY: number;
 };
 
   // private timer: Timer | undefined;
@@ -61,8 +53,14 @@ interface PlayerState {
   //   //this.advanceBlockInPixels(2);
   // }
 
+const handleKey: KeyboardCallback = (event) => {
+  alert(event.charCode);
+}
+
 const Player = (props: PlayerProps) => {
   const context = useContext(GameContext);
+
+  // context.keyboardSubscribe(handleKey);
 
   const gridData: GridData = new GridData(
     context.fieldWidth,

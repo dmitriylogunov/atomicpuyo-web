@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import Group from "./group";
-import _ from "lodash";
-import QueueData from "../classes/queueData";
+import QueueData from "../classes/queue_data";
 
 interface QueueProps {
   queueData: QueueData;

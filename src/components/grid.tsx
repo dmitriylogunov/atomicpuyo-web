@@ -1,9 +1,9 @@
 import React, {ReactNodeArray} from 'react';
 import Puyo from './puyo';
-import GridData, {emptyCell} from "../classes/gridData";
+import Grid_data, {emptyCell} from "../classes/grid_data";
 
 interface GridProps {
-  data: GridData,
+  data: Grid_data,
   children?: ReactNodeArray
 };
 
@@ -11,14 +11,14 @@ const Grid = (props: GridProps): JSX.Element => {
   const data = props.data;
 
   const grid = data.get().map((type, index) => {
-    const puyo = (type == emptyCell)
+    const puyo = (type === emptyCell)
       ? ''
       : <Puyo
         type={type}
-        connectTop={type == data.getCellToTop(index)}
-        connectBottom={type == data.getCellToBottom(index)}
-        connectLeft={type == data.getCellToLeft(index)}
-        connectRight={type == data.getCellToRight(index)}
+        connectTop={type === data.getCellToTop(index)}
+        connectBottom={type === data.getCellToBottom(index)}
+        connectLeft={type === data.getCellToLeft(index)}
+        connectRight={type === data.getCellToRight(index)}
       />
 
     let className
