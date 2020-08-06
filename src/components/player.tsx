@@ -1,16 +1,23 @@
-import React, {useContext, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import _ from 'lodash';
 import Grid from './grid';
 import Garbage from './garbage'
 import GroupController from "./groupcontroller";
-import {GameContext, KeyboardCallback} from "./game";
+import {GameContext} from "./game";
 import QueueData from "../classes/queue_data";
 import GridData from "../classes/grid_data";
 
+export type CallbackData =
+  | {type: "pause", playerId: number}
+  | {type: "garbage", count: number};
+
+type PlayerCallback = (data: CallbackData) => void;
+
 interface PlayerProps {
-  id: string;
+  id: number;
   name: string;
-  // onGarbageGenerated: ((count: number): void => void)
+  onPause?: PlayerCallback
+  onGarbageGenerated?: PlayerCallback
 };
 
   // private timer: Timer | undefined;
@@ -53,14 +60,39 @@ interface PlayerProps {
   //   //this.advanceBlockInPixels(2);
   // }
 
-const handleKey: KeyboardCallback = (event) => {
-  alert(event.charCode);
-}
+const keyUp = 38;
+const keyDown = 40;
+const keyLeft = 37;
+const keyRight = 39;
+const keySpace = 32;
+const keyEsc = 27;
 
 const Player = (props: PlayerProps) => {
   const context = useContext(GameContext);
 
-  // context.keyboardSubscribe(handleKey);
+  const dispatchCallback = (callback?: PlayerCallback, data?: CallbackData): void => {
+    if (callback && data) {
+      callback(data);
+    }
+  }
+
+  // const handleKeyboard = useCallback((event) => {
+  // }, []);
+
+  useEffect(() => {
+    const handleKeyboard = (event: any) => {
+      console.log(event.keyCode);
+      if (event.keyCode === keyEsc) {
+        dispatchCallback(props.onPause, {type: "pause", playerId: props.id});
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyboard, false);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyboard, false);
+    };
+  }, []);
 
   const gridData: GridData = new GridData(
     context.fieldWidth,
