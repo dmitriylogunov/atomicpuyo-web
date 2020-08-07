@@ -1,5 +1,5 @@
-import React, {useContext, useReducer, useRef} from "react";
-import Group from "./group";
+import React, {RefObject, useRef} from "react";
+import Group, {GroupElement} from "./group";
 
 const cellToPixelRatio = 16;
 
@@ -10,35 +10,37 @@ interface GroupControllerProps {
 }
 
 interface GroupControllerState {
-  group: JSX.Element,
   x: number,
   y: number,
 }
 
-type Action =
-  | {"type": "update_coordinates", x: number, y: number};
+class GroupController extends React.Component<GroupControllerProps, GroupControllerState> {
+  private readonly groupRef: RefObject<GroupElement>;
 
-function reducer(currentState: GroupControllerState, action: Action) {
-  switch (action.type) {
-    case "update_coordinates":
-      return {...currentState, x: action.x, y: action.y}
+  constructor(props: GroupControllerProps) {
+    super(props);
+
+    this.groupRef = React.createRef<GroupElement>();
+
+    this.state = {
+      x: props.x * cellToPixelRatio,
+      y: props.y * cellToPixelRatio
+    }
   }
-}
 
-const GroupController = (props: GroupControllerProps) => {
-  const [state, updateState] = useReducer(reducer, {
-    group: <Group
-      groupType = {props.groupType}
-    />,
-    x: props.x * cellToPixelRatio,
-    y: props.y * cellToPixelRatio,
-  });
+  render() {
+    return (
+      <Group
+        ref = {this.groupRef}
+        groupType={0}
+      />
+    )
+    // handleKeyDown: {(key: number)=>debugger })
 
-  const groupWrapperDiv = useRef<HTMLDivElement>(null);
-
-  return (<div ref={groupWrapperDiv}>
-    {state.group}
-  </div>)
+    // return (<div ref={groupWrapperDiv}>
+    //   {groupComponent}
+    // </div>)
+  }
 }
 
 export default GroupController;

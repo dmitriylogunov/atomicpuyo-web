@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {forwardRef, useContext, useState} from "react";
 import Grid from "./grid";
 import _ from "lodash";
 import Grid_data, {emptyCell} from "../classes/grid_data";
@@ -29,7 +29,7 @@ export interface GroupProps {
   groupType: number;
 }
 
-interface GroupState {
+export interface GroupState {
   rotations: Array<Grid_data>,
   currentRotation: number
 }
@@ -182,7 +182,9 @@ const getGridDataOfGroup = (numberOfColors: number, blockType: number): Array<nu
   //   )
   // }
 
-const Group = (props: GroupProps): JSX.Element => {
+export type GroupElement = HTMLDivElement;
+
+const Group = forwardRef<GroupElement, GroupProps>((props, ref): JSX.Element => {
   const context = useContext(GameContext);
 
   const data: Grid_data = new Grid_data(
@@ -204,13 +206,13 @@ const Group = (props: GroupProps): JSX.Element => {
   const className = "group";
   const groupData = state.rotations[state.currentRotation];
 
-  return(
-    <div className={className}>
+  return (
+    <div ref={ref} className={className}>
       <Grid
         data={groupData}
       />
     </div>
-  )
-}
+  );
+});
 
 export default Group;

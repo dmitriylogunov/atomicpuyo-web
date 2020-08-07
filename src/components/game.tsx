@@ -1,18 +1,14 @@
-import React, {KeyboardEvent, useState} from 'react';
-import Player, {CallbackData} from './player';
+import React, {Context, KeyboardEvent, useState} from 'react';
+import Player from './player';
 import './../styles/game.scss';
 import Gamecontrols from "./gamecontrols";
 
-const gameContextDefaults = {
-  colorCount: 4,
-  groupTypeCount: 4,
-  fieldWidth: 6,
-  fieldHeight: 12
+interface GameProps {
+  colorCount: number,
+  groupTypeCount: number,
+  fieldWidth: number,
+  fieldHeight: number
 }
-
-export const GameContext = React.createContext({
-  ...gameContextDefaults,
-});
 
 type PlayerData = {
   id: number;
@@ -29,59 +25,82 @@ type ActionEvent =
     count: number;
   };
 
-interface GameProps {
+interface GameState {
+  playersData: Array<PlayerData>;
+  actionQueue: Array<ActionEvent>;
 }
 
-const Game = (props: GameProps): JSX.Element => {
+export let GameContext: Context<GameProps>;
 
-  const handlePause = (data: CallbackData) => { alert("Game paused by the player") };
+class Game extends React.Component<GameProps, GameState> {
+  constructor(props: GameProps) {
+    super(props);
 
-  const playersData: Array<PlayerData> = [
-    {
-      id: 1,
-      name: "Ann"
-    },
-    // {
-    //   id: 2,
-    //   name: "Joe"
-    // }
-  ];
+    GameContext = React.createContext({
+       ...props
+    });
 
-  const actionQueue = Array<ActionEvent>(0);
+    this.handlePauseToggle = this.handlePauseToggle.bind(this);
+    this.handleGarbage = this.handleGarbage.bind(this);
 
-  const [state, setState] = useState({
-    playersData: playersData,
-    actionQueue: actionQueue,
-  });
-
-  const players = state.playersData.map((player) => {
-    return (
-      <Player
-        key={player.id}
-        id={player.id}
-        name={player.name}
-        onPause={handlePause}
-        // onGarbageGenerated=this.handleNewGarbage()
-      />
-    )
-  });
-
-  return (
-    <GameContext.Provider value={
+    const playersData: Array<PlayerData> = [
       {
-        ...gameContextDefaults,
-      }
+        id: 1,
+        name: "Ann"
+      },
+      // {
+      //   id: 2,
+      //   name: "Joe"
+      // }
+    ];
+
+    const actionQueue = Array<ActionEvent>(0);
+
+    this.state = {
+      playersData: playersData,
+      actionQueue: actionQueue,
     }
-    >
-      <div className="game" style={{height: '100vh', width: '100vw'}}>
-        {players}
-        <Gamecontrols
-          onResume={"A"}
-          onPause={"B"}
+  }
+
+  private handlePauseToggle(playerId: number): void {
+    alert("Game paused by the player" + playerId)
+  };
+
+  private handleGarbage(playerId: number, garbageCount: number): void {
+    alert("Garbage incoming from " + playerId + " (" + garbageCount + "items)");
+  };
+
+  render() {
+
+    const players = this.state.playersData.map((player) => {
+      return (
+        <Player
+          key={player.id}
+          id={player.id}
+          name={player.name}
+          onPauseToggle={this.handlePauseToggle}
+          onGarbageGenerated={this.handleGarbage}
         />
-      </div>
-    </GameContext.Provider>
-  )
+      )
+    });
+
+    return (
+      <GameContext.Provider value={
+        {
+          ...this.props,
+        }
+      }
+      >
+        <div className="game" style={{height: '100vh', width: '100vw'}}>
+          {players}
+          <Gamecontrols
+            onResume={"A"}
+            onPause={"B"}
+          />
+        </div>
+      </GameContext.Provider>
+    )
+  }
 }
 
 export default Game;

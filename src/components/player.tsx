@@ -1,5 +1,4 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react';
-import _ from 'lodash';
 import Grid from './grid';
 import Garbage from './garbage'
 import GroupController from "./groupcontroller";
@@ -7,18 +6,12 @@ import {GameContext} from "./game";
 import QueueData from "../classes/queue_data";
 import GridData from "../classes/grid_data";
 
-export type CallbackData =
-  | {type: "pause", playerId: number}
-  | {type: "garbage", count: number};
-
-type PlayerCallback = (data: CallbackData) => void;
-
 interface PlayerProps {
   id: number;
   name: string;
-  onPause?: PlayerCallback
-  onGarbageGenerated?: PlayerCallback
-};
+  onPauseToggle: (playerId: number) => void;
+  onGarbageGenerated: (playerId: number, garbageCount: number) => void;
+}
 
   // private timer: Timer | undefined;
 
@@ -59,31 +52,22 @@ interface PlayerProps {
   //   );
   //   //this.advanceBlockInPixels(2);
   // }
-
-const keyUp = 38;
-const keyDown = 40;
-const keyLeft = 37;
-const keyRight = 39;
-const keySpace = 32;
-const keyEsc = 27;
+const keyCodes = {
+  keyUp: 38,
+  keyDown: 40,
+  keyLeft: 37,
+  keyRight: 39,
+  keySpace: 32,
+  keyEsc: 27,
+}
 
 const Player = (props: PlayerProps) => {
   const context = useContext(GameContext);
 
-  const dispatchCallback = (callback?: PlayerCallback, data?: CallbackData): void => {
-    if (callback && data) {
-      callback(data);
-    }
-  }
-
-  // const handleKeyboard = useCallback((event) => {
-  // }, []);
-
   useEffect(() => {
     const handleKeyboard = (event: any) => {
-      console.log(event.keyCode);
-      if (event.keyCode === keyEsc) {
-        dispatchCallback(props.onPause, {type: "pause", playerId: props.id});
+      if (event.keyCode === keyCodes.keyEsc) {
+        props.onPauseToggle(props.id);
       }
     }
 
@@ -100,10 +84,10 @@ const Player = (props: PlayerProps) => {
   );
 
   // for debugging layout
-  const dataArray = gridData.get();
-  for (let i = 0; i < dataArray.length; i++) {
-    dataArray[i] = _.random(0,context.colorCount);
-  }
+  // const dataArray = gridData.get();
+  // for (let i = 0; i < dataArray.length; i++) {
+  //   dataArray[i] = _.random(0,context.colorCount);
+  // }
 
   const queueData = new QueueData(context.groupTypeCount);
 

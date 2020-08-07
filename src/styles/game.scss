@@ -103,58 +103,61 @@ $player2bgColor: #cd5e71;
 
       .block {
         position: relative;
+        display: grid;
       }
 
-      ol.grid {
-        text-decoration: none;
-        list-style-type: none;
-      }
+      .grid {
+        ol {
+          text-decoration: none;
+          list-style-type: none;
+        }
 
-      .grid .cells {
-        display: flex;
-        flex-flow: row wrap;
-        width: $cellDimension * 6;
-        border: 0;
-        overflow: hidden;
-        margin: 0;
-        padding: 0;
-
-        .cell {
+        .cells {
+          display: flex;
+          flex-flow: row wrap;
+          width: $cellDimension * 6;
+          border: 0;
+          overflow: hidden;
           margin: 0;
-          height: $cellDimension;
-          width: $cellDimension;
+          padding: 0;
 
-          @mixin puyoCellBackground($color) {
-            background-color: rgba($color, 0.5);
-            box-shadow: 0 0 $cellDimension/2 0 $color;
-          }
+          .cell {
+            margin: 0;
+            height: $cellDimension;
+            width: $cellDimension;
 
-          &.cell-empty {
-            background-color: transparent;
-          }
-
-          &.cell-withpuyo {
-            border-radius: 50%;
-            opacity: 0.5;
-
-            &.type1 {
-              @include puyoCellBackground($puyocolor1);
+            @mixin puyoCellBackground($color) {
+              background-color: rgba($color, 0.5);
+              box-shadow: 0 0 $cellDimension/2 0 $color;
             }
 
-            &.type2 {
-              @include puyoCellBackground($puyocolor2);
+            &.cell-empty {
+              background-color: transparent;
             }
 
-            &.type3 {
-              @include puyoCellBackground($puyocolor3);
-            }
+            &.cell-withpuyo {
+              border-radius: 50%;
+              opacity: 0.5;
 
-            &.type4 {
-              @include puyoCellBackground($puyocolor4);
-            }
+              &.type1 {
+                @include puyoCellBackground($puyocolor1);
+              }
 
-            &.type5 {
-              @include puyoCellBackground($puyocolor5);
+              &.type2 {
+                @include puyoCellBackground($puyocolor2);
+              }
+
+              &.type3 {
+                @include puyoCellBackground($puyocolor3);
+              }
+
+              &.type4 {
+                @include puyoCellBackground($puyocolor4);
+              }
+
+              &.type5 {
+                @include puyoCellBackground($puyocolor5);
+              }
             }
           }
         }
