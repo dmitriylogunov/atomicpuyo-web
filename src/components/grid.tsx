@@ -1,6 +1,7 @@
 import React, {ReactNodeArray} from 'react';
 import Puyo from './puyo';
 import Grid_data, {emptyCell} from "../classes/grid_data";
+import classNames from "classnames";
 
 interface GridProps {
   data: Grid_data,
@@ -21,9 +22,11 @@ const Grid = (props: GridProps): JSX.Element => {
         connectRight={type === data.getCellToRight(index)}
       />
 
-    let className
-      = 'cell'
-      + ' cell-' + ((type == emptyCell) ? 'empty' : 'withpuyo type' + type.toString());
+
+    const className = classNames({
+      'cell': true,
+      'cell-empty': type === emptyCell,
+    }) + ' type' + type.toString();
 
     return (
       <li key={index} className={className}>{puyo}</li>

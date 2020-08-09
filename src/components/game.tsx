@@ -1,19 +1,16 @@
-import React, {Context, KeyboardEvent, useState} from 'react';
-import Player from './player';
+import React from 'react';
+import GameControls from "./game_controls";
+import Player from "./player";
 import './../styles/game.scss';
-import Gamecontrols from "./gamecontrols";
 
 interface GameProps {
-  colorCount: number,
-  groupTypeCount: number,
-  fieldWidth: number,
-  fieldHeight: number
 }
 
 type PlayerData = {
   id: number;
   name: string;
 }
+
 type ActionEvent =
   | {
     type: "move",
@@ -30,15 +27,9 @@ interface GameState {
   actionQueue: Array<ActionEvent>;
 }
 
-export let GameContext: Context<GameProps>;
-
 class Game extends React.Component<GameProps, GameState> {
   constructor(props: GameProps) {
     super(props);
-
-    GameContext = React.createContext({
-       ...props
-    });
 
     this.handlePauseToggle = this.handlePauseToggle.bind(this);
     this.handleGarbage = this.handleGarbage.bind(this);
@@ -71,13 +62,19 @@ class Game extends React.Component<GameProps, GameState> {
   };
 
   render() {
-
     const players = this.state.playersData.map((player) => {
       return (
         <Player
           key={player.id}
           id={player.id}
+
           name={player.name}
+
+          fieldWidth={6}
+          fieldHeight={12}
+          groupTypeCount={4}
+          colourCount={5}
+
           onPauseToggle={this.handlePauseToggle}
           onGarbageGenerated={this.handleGarbage}
         />
@@ -85,20 +82,13 @@ class Game extends React.Component<GameProps, GameState> {
     });
 
     return (
-      <GameContext.Provider value={
-        {
-          ...this.props,
-        }
-      }
-      >
         <div className="game" style={{height: '100vh', width: '100vw'}}>
           {players}
-          <Gamecontrols
-            onResume={"A"}
-            onPause={"B"}
+          <GameControls
+            onResume={()=>alert("resume")}
+            onPause={()=>alert("pause")}
           />
         </div>
-      </GameContext.Provider>
     )
   }
 }

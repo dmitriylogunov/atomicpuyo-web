@@ -1,14 +1,22 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import Grid from './grid';
 import Garbage from './garbage'
-import GroupController from "./groupcontroller";
-import {GameContext} from "./game";
-import QueueData from "../classes/queue_data";
+import GroupBeingPlayed from "./groupbeingplayed";
+import GroupQueueData from "../classes/group_queue_data";
 import GridData from "../classes/grid_data";
+import Group from "./group";
+import GroupQueue from "./group_queue";
+import _ from 'lodash';
 
 interface PlayerProps {
   id: number;
   name: string;
+
+  fieldWidth: number;
+  fieldHeight: number;
+  groupTypeCount: number;
+  colourCount: number;
+
   onPauseToggle: (playerId: number) => void;
   onGarbageGenerated: (playerId: number, garbageCount: number) => void;
 }
@@ -62,8 +70,6 @@ const keyCodes = {
 }
 
 const Player = (props: PlayerProps) => {
-  const context = useContext(GameContext);
-
   useEffect(() => {
     const handleKeyboard = (event: any) => {
       if (event.keyCode === keyCodes.keyEsc) {
@@ -76,41 +82,46 @@ const Player = (props: PlayerProps) => {
     return () => {
       document.removeEventListener("keydown", handleKeyboard, false);
     };
-  }, []);
+  }, [props]);
 
   const gridData: GridData = new GridData(
-    context.fieldWidth,
-    context.fieldHeight
+    props.fieldWidth,
+    props.fieldHeight
   );
 
-  // for debugging layout
+  // to test the stylesheet of game field, fill the field with random puyos
   // const dataArray = gridData.get();
   // for (let i = 0; i < dataArray.length; i++) {
-  //   dataArray[i] = _.random(0,context.colorCount);
+  //   dataArray[i] = _.random(0, props.colourCount);
   // }
 
-  const queueData = new QueueData(context.groupTypeCount);
+  const groupQueueData = new GroupQueueData(props.groupTypeCount, props.colourCount);
+  const currentGroupGridData = groupQueueData.pop().gridData;
 
   const [state, setState] = useState({
     gridData: gridData,
-    queueData: queueData,
+    groupQueueData: groupQueueData,
+    currentGroupGridData: currentGroupGridData,
     groupX: 0,
     groupY: 0,
   });
 
   return (
     <div className={"player player" + props.id}>
-      <div className="queue" />
+      <GroupQueue
+        groupQueueData={state.groupQueueData}
+      />
       <div className="field">
         <Garbage/>
         <Grid
           data={state.gridData}
         />
-        <GroupController
+        <GroupBeingPlayed
           x={0}
           y={3}
-          groupType={1}
-        />
+        >
+          <Group gridData={state.currentGroupGridData}/>
+        </GroupBeingPlayed>
       </div>
     </div>
   );

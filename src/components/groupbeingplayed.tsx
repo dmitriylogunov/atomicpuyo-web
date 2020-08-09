@@ -1,10 +1,10 @@
-import React, {RefObject, useRef} from "react";
-import Group, {GroupElement} from "./group";
+import React from "react";
+import Group from "./group";
+import classNames from "classnames";
 
 const cellToPixelRatio = 16;
 
 interface GroupControllerProps {
-  groupType: number
   x: number,
   y: number;
 }
@@ -14,13 +14,9 @@ interface GroupControllerState {
   y: number,
 }
 
-class GroupController extends React.Component<GroupControllerProps, GroupControllerState> {
-  private readonly groupRef: RefObject<GroupElement>;
-
+class GroupBeingPlayed extends React.Component<GroupControllerProps, GroupControllerState> {
   constructor(props: GroupControllerProps) {
     super(props);
-
-    this.groupRef = React.createRef<GroupElement>();
 
     this.state = {
       x: props.x * cellToPixelRatio,
@@ -29,11 +25,18 @@ class GroupController extends React.Component<GroupControllerProps, GroupControl
   }
 
   render() {
+    const style = {
+      "animationDuration": "1s"
+    };
+
+    const className=classNames({
+      'animatedGroup': true
+    });
+
     return (
-      <Group
-        ref = {this.groupRef}
-        groupType={0}
-      />
+      <div className={"animated-group"} style={style}>
+        {this.props.children}
+      </div>
     )
     // handleKeyDown: {(key: number)=>debugger })
 
@@ -43,4 +46,4 @@ class GroupController extends React.Component<GroupControllerProps, GroupControl
   }
 }
 
-export default GroupController;
+export default GroupBeingPlayed;

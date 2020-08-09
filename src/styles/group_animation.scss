@@ -1,0 +1,14 @@
+@keyframes animated-group {
+  from {
+    top: 0;
+  }
+  to
+  {
+    top: $cellDimension;
+  }
+}
+
+.animated-group {
+  animation-name: animated-group;
+  background-color: red;
+}
