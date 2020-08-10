@@ -126,7 +126,7 @@ const Player = (props: PlayerProps) => {
       <div className="field">
         <Garbage/>
         <Grid data={state.gridData} >
-          <GroupBeingPlayed x={0} y={3} >
+          <GroupBeingPlayed x={2} y={0} >
             <Group gridData={state.currentGroupGridData}/>
           </GroupBeingPlayed>
         </Grid>

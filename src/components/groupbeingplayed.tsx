@@ -1,7 +1,8 @@
 import React from "react";
-import classNames from "classnames";
 
-const cellToPixelRatio = 16;
+// TODO extract out of class
+const sizeOfCellInEm = 3;
+const secondsPerCell = 0.75;
 
 interface GroupControllerProps {
   x: number,
@@ -18,30 +19,23 @@ class GroupBeingPlayed extends React.Component<GroupControllerProps, GroupContro
     super(props);
 
     this.state = {
-      x: props.x * cellToPixelRatio,
-      y: props.y * cellToPixelRatio
+      x: props.x,
+      y: props.y
     }
   }
 
   render() {
     const style = {
-      "animationDuration": "0.75s"
+      "animationDuration": secondsPerCell + "s",
+      "top": this.state.y*sizeOfCellInEm + "em",
+      "left": this.state.x*sizeOfCellInEm + "em",
     };
-
-    const className=classNames({
-      'animatedGroup': true
-    });
 
     return (
       <div className={"animated-group"} style={style}>
         {this.props.children}
       </div>
     )
-    // handleKeyDown: {(key: number)=>debugger })
-
-    // return (<div ref={groupWrapperDiv}>
-    //   {groupComponent}
-    // </div>)
   }
 }
 
