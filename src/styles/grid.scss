@@ -1,0 +1,23 @@
+.grid {
+  display: grid;
+
+  .field & {
+    grid-template-columns: repeat($fieldWidth, 1fr);
+  }
+
+  .group & {
+    grid-template-columns: repeat($groupWidth, 1fr);
+  }
+
+  border: 0;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+
+  .cell {
+    margin: 0;
+    height: $cellSize;
+    width: $cellSize;
+
+  }
+}

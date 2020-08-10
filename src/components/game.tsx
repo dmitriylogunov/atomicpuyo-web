@@ -39,10 +39,10 @@ class Game extends React.Component<GameProps, GameState> {
         id: 1,
         name: "Ann"
       },
-      // {
-      //   id: 2,
-      //   name: "Joe"
-      // }
+      {
+        id: 2,
+        name: "Joe"
+      }
     ];
 
     const actionQueue = Array<ActionEvent>(0);

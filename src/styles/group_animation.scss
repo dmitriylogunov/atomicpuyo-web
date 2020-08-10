@@ -1,14 +1,22 @@
 @keyframes animated-group {
   from {
-    top: 0;
+    padding-top: 0em;
   }
   to
   {
-    top: $cellDimension;
+    padding-top: 3em;
   }
+
 }
 
 .animated-group {
-  animation-name: animated-group;
-  background-color: red;
+  position: absolute;
+  top: 0px;
+  background: transparent;
+
+  > .group {
+    animation-name: animated-group;
+    animation-timing-function: linear;
+    animation-iteration-count: 100;
+  }
 }

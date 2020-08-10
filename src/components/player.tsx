@@ -90,10 +90,10 @@ const Player = (props: PlayerProps) => {
   );
 
   // to test the stylesheet of game field, fill the field with random puyos
-  // const dataArray = gridData.get();
-  // for (let i = 0; i < dataArray.length; i++) {
-  //   dataArray[i] = _.random(0, props.colourCount);
-  // }
+  const dataArray = gridData.get();
+  for (let i = 0; i < dataArray.length; i++) {
+    dataArray[i] = _.random(0, props.colourCount);
+  }
 
   const groupQueueData = new GroupQueueData(props.groupTypeCount, props.colourCount);
   const currentGroupGridData = groupQueueData.pop().gridData;
@@ -113,15 +113,11 @@ const Player = (props: PlayerProps) => {
       />
       <div className="field">
         <Garbage/>
-        <Grid
-          data={state.gridData}
-        />
-        <GroupBeingPlayed
-          x={0}
-          y={3}
-        >
-          <Group gridData={state.currentGroupGridData}/>
-        </GroupBeingPlayed>
+        <Grid data={state.gridData} >
+          <GroupBeingPlayed x={0} y={3} >
+            <Group gridData={state.currentGroupGridData}/>
+          </GroupBeingPlayed>
+        </Grid>
       </div>
     </div>
   );

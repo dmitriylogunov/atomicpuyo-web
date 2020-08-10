@@ -1,5 +1,4 @@
 import React from "react";
-import Group from "./group";
 import classNames from "classnames";
 
 const cellToPixelRatio = 16;
@@ -26,7 +25,7 @@ class GroupBeingPlayed extends React.Component<GroupControllerProps, GroupContro
 
   render() {
     const style = {
-      "animationDuration": "1s"
+      "animationDuration": "0.75s"
     };
 
     const className=classNames({
