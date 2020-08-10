@@ -1,14 +1,15 @@
 import React from 'react';
 import GameControls from "./game_controls";
-import Player from "./player";
+import Player, {PlayerControlType} from "./player";
 import './../styles/game.scss';
 
 interface GameProps {
 }
 
-type PlayerData = {
+export type PlayerData = {
   id: number;
   name: string;
+  control: PlayerControlType;
 }
 
 type ActionEvent =
@@ -37,11 +38,13 @@ class Game extends React.Component<GameProps, GameState> {
     const playersData: Array<PlayerData> = [
       {
         id: 1,
-        name: "Ann"
+        name: "Ann",
+        control: "local",
       },
       {
         id: 2,
-        name: "Joe"
+        name: "Joe",
+        control: "ai",
       }
     ];
 
@@ -66,9 +69,8 @@ class Game extends React.Component<GameProps, GameState> {
       return (
         <Player
           key={player.id}
-          id={player.id}
 
-          name={player.name}
+          {...player}
 
           fieldWidth={6}
           fieldHeight={12}

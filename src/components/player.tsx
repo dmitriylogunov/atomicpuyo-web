@@ -8,9 +8,12 @@ import Group from "./group";
 import GroupQueue from "./group_queue";
 import _ from 'lodash';
 
+export type PlayerControlType = "local" | "ai" | "remote";
+
 interface PlayerProps {
   id: number;
   name: string;
+  control: PlayerControlType;
 
   fieldWidth: number;
   fieldHeight: number;
@@ -70,18 +73,27 @@ const keyCodes = {
 }
 
 const Player = (props: PlayerProps) => {
-  useEffect(() => {
-    const handleKeyboard = (event: any) => {
-      if (event.keyCode === keyCodes.keyEsc) {
-        props.onPauseToggle(props.id);
-      }
+  const handleKeyboard = (event: any) => {
+    if (event.keyCode === keyCodes.keyEsc) {
+      props.onPauseToggle(props.id);
     }
+  }
 
-    document.addEventListener("keydown", handleKeyboard, false);
+  const initialiseComponent = (): void => {
+    if (props.control==="local") {
+      document.addEventListener("keydown", handleKeyboard, false);
+    }
+  }
 
-    return () => {
+  const handleDestroyOfComponent = (): void => {
+    if (props.control==="local") {
       document.removeEventListener("keydown", handleKeyboard, false);
-    };
+    }
+  }
+
+  useEffect(() => {
+    initialiseComponent();
+    return handleDestroyOfComponent;
   }, [props]);
 
   const gridData: GridData = new GridData(
@@ -90,10 +102,10 @@ const Player = (props: PlayerProps) => {
   );
 
   // to test the stylesheet of game field, fill the field with random puyos
-  const dataArray = gridData.get();
-  for (let i = 0; i < dataArray.length; i++) {
-    dataArray[i] = _.random(0, props.colourCount);
-  }
+  // const dataArray = gridData.get();
+  // for (let i = 0; i < dataArray.length; i++) {
+  //   dataArray[i] = _.random(0, props.colourCount);
+  // }
 
   const groupQueueData = new GroupQueueData(props.groupTypeCount, props.colourCount);
   const currentGroupGridData = groupQueueData.pop().gridData;
