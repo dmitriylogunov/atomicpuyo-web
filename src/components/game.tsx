@@ -26,6 +26,8 @@ type ActionEvent =
 interface GameState {
   playersData: Array<PlayerData>;
   actionQueue: Array<ActionEvent>;
+  isPaused: boolean;
+  pausedByPlayer: number;
 }
 
 class Game extends React.Component<GameProps, GameState> {
@@ -53,11 +55,16 @@ class Game extends React.Component<GameProps, GameState> {
     this.state = {
       playersData: playersData,
       actionQueue: actionQueue,
+      isPaused: false,
+      pausedByPlayer: -1,
     }
   }
 
   private handlePauseToggle(playerId: number): void {
-    alert("Game paused by the player" + playerId)
+    this.setState({
+      isPaused: !this.state.isPaused,
+      pausedByPlayer: playerId,
+    });
   };
 
   private handleGarbage(playerId: number, garbageCount: number): void {
@@ -69,6 +76,7 @@ class Game extends React.Component<GameProps, GameState> {
       return (
         <Player
           key={player.id}
+          isPaused={this.state.isPaused}
 
           {...player}
 

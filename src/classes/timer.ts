@@ -1,12 +1,12 @@
 export class Timer {
-  private timerRef: number;
+  private timerId: number;
 
   constructor(callback: TimerHandler ,interval: number) {
-    this.timerRef = setInterval(callback, interval);
+    this.timerId = setInterval(callback, interval);
   }
 
   public destroy() {
-    clearInterval(this.timerRef);
+    clearInterval(this.timerId);
   }
 }
 

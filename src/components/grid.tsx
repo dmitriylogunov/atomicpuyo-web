@@ -22,7 +22,6 @@ const Grid = (props: GridProps): JSX.Element => {
         connectRight={type === data.getCellToRight(index)}
       />
 
-
     const className = classNames({
       'cell': true,
       'cell-empty': type === emptyCell,

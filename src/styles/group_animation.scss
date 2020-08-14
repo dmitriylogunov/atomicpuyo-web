@@ -10,10 +10,11 @@
 }
 
 .animated-group {
+  padding-top: 3em;
   position: absolute;
   background: transparent;
   overflow: visible;
-  animation-name: puyo-normal-move;
-  animation-iteration-count: 50;
-  animation-timing-function: linear;
+  //animation-name: puyo-normal-move;
+  //animation-iteration-count: 100;
+  //animation-timing-function: linear;
 }

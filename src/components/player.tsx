@@ -14,6 +14,7 @@ interface PlayerProps {
   id: number;
   name: string;
   control: PlayerControlType;
+  isPaused: boolean;
 
   fieldWidth: number;
   fieldHeight: number;
@@ -126,7 +127,7 @@ const Player = (props: PlayerProps) => {
       <div className="field">
         <Garbage/>
         <Grid data={state.gridData} >
-          <GroupBeingPlayed x={2} y={0} >
+          <GroupBeingPlayed x={2} y={0} isPaused={props.isPaused} control={props.control} >
             <Group gridData={state.currentGroupGridData}/>
           </GroupBeingPlayed>
         </Grid>
